@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:parking_cli/menu.dart';
-//import 'package:parking_cli/parking_menu.dart';
-//import 'package:parking_cli/parking_space_menu.dart';
-//import 'package:parking_cli/person_menu.dart';
+import 'package:parking_cli/parking_menu.dart';
+import 'package:parking_cli/parking_space_menu.dart';
+import 'package:parking_cli/person_menu.dart';
 import 'package:parking_cli/utils/utils.dart';
-//import 'package:parking_cli/vehicle_menu.dart';
+import 'package:parking_cli/vehicle_menu.dart';
 
 void startMenu() {
   final startMenu = Menu(
@@ -24,16 +24,16 @@ void startMenu() {
     int? choice = startMenu.getUserChoice();
     switch (choice) {
       case 1:
-        //personMenu('persons');
+        personMenu('persons');
         break;
       case 2:
-        //vehicleMenu('vehicles');
+        vehicleMenu('vehicles');
         break;
       case 3:
-        //parkingSpaceMenu('parkingspaces');
+        parkingSpaceMenu('parkingspaces');
         break;
       case 4:
-        //parkingMenu('parkings');
+        parkingMenu('parkings');
         break;
       case 5:
         running = quit();
