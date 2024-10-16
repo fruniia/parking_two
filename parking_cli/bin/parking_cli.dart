@@ -1,5 +1,5 @@
-import 'package:parking_cli/parking_cli.dart' as parking_cli;
+import 'package:parking_cli/start_menu.dart';
 
 void main(List<String> arguments) {
-  print('Hello world: ${parking_cli.calculate()}!');
+  startMenu();
 }
