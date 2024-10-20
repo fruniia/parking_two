@@ -1,7 +1,7 @@
 abstract class Repository<T> {
   final List<T> _items = [];
 
-  List<T>? getAll() => _items;
+  List<T> getAll() => _items;
 
   void add(T item) {
     _items.add(item);
