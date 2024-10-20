@@ -19,4 +19,21 @@ class Vehicle {
     required this.owner,
     required this.vehicleType,
   }) : id = Uuid().v4();
+
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle(
+        id: json['id'],
+        licensePlate: json['licensePlate'],
+        owner: Person.fromJson(json['owner']),
+        vehicleType: json['vehicleType']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'licenseplate': licensePlate,
+      'owner': owner.toJson(),
+      'vehicleType': vehicleType.toString()
+    };
+  }
 }
