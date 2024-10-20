@@ -9,7 +9,7 @@ import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 
 Future<void> vehicleMenu(String menuType) async {
-  final vehicleRepo = VehicleRepository();
+ 
 
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()}. Please choose 1-5:',
@@ -27,16 +27,16 @@ Future<void> vehicleMenu(String menuType) async {
     int? choice = getNumberInput();
     switch (choice) {
       case 1:
-        await addVehicle(vehicleRepo);
+        await addVehicle();
         break;
       case 2:
-        await showVehicles(vehicleRepo);
+        await showVehicles();
         break;
       case 3:
-        await updateVehicle(vehicleRepo);
+        await updateVehicle();
         break;
       case 4:
-        await deleteVehicle(vehicleRepo);
+        await deleteVehicle();
         break;
       case 5:
         clearScreen();
@@ -49,8 +49,8 @@ Future<void> vehicleMenu(String menuType) async {
   }
 }
 
-Future<void> deleteVehicle(VehicleRepository vehicleRepo) async {
-  var vehicles = await showVehicles(vehicleRepo);
+Future<void> deleteVehicle() async {
+  var vehicles = await showVehicles();
   if (vehicles.isNotEmpty) {
     displayInfo('Please enter index to delete: ');
     var index = getNumberInput();
@@ -61,7 +61,7 @@ Future<void> deleteVehicle(VehicleRepository vehicleRepo) async {
       var str = getTextInput();
 
       if (str != null && str.toLowerCase() == 'y') {
-        vehicleRepo.delete(vehicle);
+        VehicleRepository().delete(vehicle);
       }
     }
   } else {
@@ -69,8 +69,8 @@ Future<void> deleteVehicle(VehicleRepository vehicleRepo) async {
   }
 }
 
-Future<void> updateVehicle(VehicleRepository vehicleRepo) async {
-  var vehicles = await showVehicles(vehicleRepo);
+Future<void> updateVehicle() async {
+  var vehicles = await showVehicles();
   if (vehicles.isNotEmpty) {
     displayInfo(
         'Please choose index of Vehicle (${vehicles.length == 1 ? '0' : '0-${vehicles.length - 1}'})');
@@ -117,7 +117,7 @@ Future<void> updateVehicle(VehicleRepository vehicleRepo) async {
       } else {
         displayWarning('Invalid choice');
       }
-      showVehicles(vehicleRepo);
+      showVehicles();
     }
   } else {
     print('Nothing to update');
@@ -128,7 +128,7 @@ Future<List<Person>> getPersons() async {
   return await PersonRepository().getAll();
 }
 
-Future<void> addVehicle(VehicleRepository vehicleRepo) async {
+Future<void> addVehicle() async {
   List<Person> persons = await getPersons();
   Person person;
 
@@ -151,7 +151,7 @@ Future<void> addVehicle(VehicleRepository vehicleRepo) async {
             owner: person,
             vehicleType: vehicleType);
 
-        vehicleRepo.add(v);
+        VehicleRepository().add(v);
       }
     }
   } else {
@@ -184,8 +184,8 @@ VehicleType? chooseVehicleType() {
   return null;
 }
 
-Future<List<Vehicle>> showVehicles(VehicleRepository vehicleRepo) async {
-  List<Vehicle> vehicles = await vehicleRepo.getAll();
+Future<List<Vehicle>> showVehicles() async {
+  List<Vehicle> vehicles = await VehicleRepository().getAll();
   if (vehicles.isNotEmpty) {
     for (int index = 0; index < vehicles.length; index++) {
       var vehicle = vehicles[index];

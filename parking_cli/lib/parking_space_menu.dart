@@ -5,8 +5,7 @@ import 'package:parking_cli/menu.dart';
 import 'package:parking_cli/utils/utils.dart';
 
 Future<void> parkingSpaceMenu(String menuType) async {
-  final parkingSpaceRepo = ParkingSpaceRepository();
-  final subMenu = Menu(
+   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()}. Please choose 1-5:',
       {
         1: 'Create new $menuType',
@@ -22,17 +21,17 @@ Future<void> parkingSpaceMenu(String menuType) async {
     int? choice = getNumberInput();
     switch (choice) {
       case 1:
-        await addParkingSpace(parkingSpaceRepo);
-        await showParkingSpaces(parkingSpaceRepo);
+        await addParkingSpace();
+        await showParkingSpaces();
         break;
       case 2:
-        await showParkingSpaces(parkingSpaceRepo);
+        await showParkingSpaces();
         break;
       case 3:
-        await updateParkingSpaces(parkingSpaceRepo);
+        await updateParkingSpaces();
         break;
       case 4:
-        await deleteParkingSpaces(parkingSpaceRepo);
+        await deleteParkingSpaces();
         break;
       case 5:
         clearScreen();
@@ -45,8 +44,8 @@ Future<void> parkingSpaceMenu(String menuType) async {
   }
 }
 
-Future<void> deleteParkingSpaces(ParkingSpaceRepository parkingSpaceRepo) async {
-  var parkingSpaces = await showParkingSpaces(parkingSpaceRepo);
+Future<void> deleteParkingSpaces() async {
+  var parkingSpaces = await showParkingSpaces();
 
   if (parkingSpaces.isNotEmpty) {
     displayInfo('Please enter index to delete: ');
@@ -57,7 +56,7 @@ Future<void> deleteParkingSpaces(ParkingSpaceRepository parkingSpaceRepo) async 
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
       if (str != null && str.toLowerCase() == 'y') {
-        parkingSpaceRepo.delete(parkingSpace);
+        ParkingSpaceRepository().delete(parkingSpace);
       }
     }
   } else {
@@ -65,8 +64,8 @@ Future<void> deleteParkingSpaces(ParkingSpaceRepository parkingSpaceRepo) async 
   }
 }
 
-Future<void> updateParkingSpaces(ParkingSpaceRepository parkingSpaceRepo) async {
-  var parkingSpaces = await showParkingSpaces(parkingSpaceRepo);
+Future<void> updateParkingSpaces() async {
+  var parkingSpaces = await showParkingSpaces();
   if (parkingSpaces.isNotEmpty) {
     displayInfo(
         'Please choose index of Parkingspaces (${parkingSpaces.length == 1 ? '0' : '0-${parkingSpaces.length - 1}'}): ');
@@ -111,17 +110,16 @@ double setPricePerHour() {
   return price ?? 0.0;
 }
 
-Future<void> addParkingSpace(ParkingSpaceRepository parkingSpaceRepo) async {
+Future<void> addParkingSpace() async {
   var address = setAddress();
   var price = setPricePerHour();
   ParkingSpace ps =
       ParkingSpace.withUUID(address: address, pricePerHour: price);
-  await parkingSpaceRepo.add(ps);
+  await ParkingSpaceRepository().add(ps);
 }
 
-Future<List<ParkingSpace>> showParkingSpaces(ParkingSpaceRepository parkingRepo) async {
-  List<ParkingSpace> parkingSpaces = await parkingRepo.getAll();
-  await Future.delayed(Duration(seconds: 1));
+Future<List<ParkingSpace>> showParkingSpaces() async {
+  List<ParkingSpace> parkingSpaces = await ParkingSpaceRepository().getAll();
   if (parkingSpaces.isNotEmpty) {
     for (int i = 0; i < parkingSpaces.length; i++) {
       var parkingSpace = parkingSpaces[i];

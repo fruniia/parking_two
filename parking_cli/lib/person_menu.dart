@@ -6,7 +6,6 @@ import 'package:parking_cli/repositories/person_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 
 Future<void> personMenu(String menuType) async {
-  final personRepo = PersonRepository();
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()} Please choose 1-5:',
       {
@@ -23,16 +22,16 @@ Future<void> personMenu(String menuType) async {
     int? choice = getNumberInput();
     switch (choice) {
       case 1:
-        await addPerson(personRepo);
+        await addPerson();
         break;
       case 2:
-        await showPersons(personRepo);
+        await showPersons();
         break;
       case 3:
-        await updatePerson(personRepo);
+        await updatePerson();
         break;
       case 4:
-        await deletePerson(personRepo);
+        await deletePerson();
         break;
       case 5:
         clearScreen();
@@ -45,8 +44,8 @@ Future<void> personMenu(String menuType) async {
   }
 }
 
-Future<void> deletePerson(PersonRepository personRepo) async {
-  var persons = await showPersons(personRepo);
+Future<void> deletePerson() async {
+  var persons = await showPersons();
   if (persons.isNotEmpty) {
     displayInfo('Please enter index to delete?');
     var index = getNumberInput();
@@ -55,7 +54,7 @@ Future<void> deletePerson(PersonRepository personRepo) async {
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
       if (str != null && str.toLowerCase() == 'y') {
-        await personRepo.delete(del);
+        await PersonRepository().delete(del);
       }
     }
   } else {
@@ -63,8 +62,8 @@ Future<void> deletePerson(PersonRepository personRepo) async {
   }
 }
 
-Future<void> updatePerson(PersonRepository personRepo) async {
-  var persons = await showPersons(personRepo);
+Future<void> updatePerson() async {
+  var persons = await showPersons();
   if (persons.isNotEmpty) {
     displayInfo(
         'Please choose index (${persons.length == 1 ? '0' : '0-${persons.length - 1}'})');
@@ -84,7 +83,7 @@ Future<void> updatePerson(PersonRepository personRepo) async {
               id: personToUpdate.id,
               name: newName,
               socialSecNumber: personToUpdate.socialSecNumber);
-          await personRepo.update(index, newPerson);
+          await PersonRepository().update(index, newPerson);
         } else {
           displayInfo('No update.');
         }
@@ -95,14 +94,14 @@ Future<void> updatePerson(PersonRepository personRepo) async {
   }
 }
 
-Future<void> addPerson(PersonRepository personRepo) async {
+Future<void> addPerson() async {
   displayInfo("Enter your name:");
   var newName = getTextInput();
   var ssn = setSocSecNum();
 
   if (newName != null && ssn != '') {
     Person person = Person.withUUID(name: newName, socialSecNumber: ssn);
-    await personRepo.add(person);
+    await PersonRepository().add(person);
   } else {
     displayWarning('Nope!');
   }
@@ -124,8 +123,8 @@ String setSocSecNum() {
   return ssn ?? '';
 }
 
-Future<List<Person>> showPersons(PersonRepository personRepo) async {
-  List<Person> persons = await personRepo.getAll();
+Future<List<Person>> showPersons() async {
+  List<Person> persons = await PersonRepository().getAll();
   if (persons.isNotEmpty) {
     for (int index = 0; index < persons.length; index++) {
       var person = persons[index];
