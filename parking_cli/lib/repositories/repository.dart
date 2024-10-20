@@ -1,15 +1,20 @@
 abstract class Repository<T> {
   final List<T> _items = [];
 
-  List<T>? getAll() => _items;
+  Future<List<T>> getAll() async => _items;
 
-  void add(T item) {
+  Future<T> add(T item) async{
     _items.add(item);
+    return item;
   }
 
-  void update(int index, T newItem) {
+  Future<T> update(int index, T newItem) async{
     _items[index] = newItem;
+    return _items[index];
   }
 
-  void delete(T item) => _items.remove(item);
+  Future<T> delete(T item) async{
+     _items.remove(item);
+    return item;
+  }
 }
