@@ -21,12 +21,26 @@ class Parking {
   DateTime get start => _start;
 
   Parking(
-      {required this.id,
-      required this.vehicle,
-      required this.parkingSpace});
+      {required this.id, required this.vehicle, required this.parkingSpace});
 
   Parking.withUUID({
     required this.vehicle,
     required this.parkingSpace,
   }) : id = Uuid().v4();
+
+  factory Parking.fromJson(Map<String, dynamic> json) {
+    return Parking(
+      id: json['id'],
+      vehicle: json['vehicle'],
+      parkingSpace: json['parkingSpace'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'vehicle': vehicle.toJson(),
+      'parkingSpace': parkingSpace.toJson()
+    };
+  }
 }
