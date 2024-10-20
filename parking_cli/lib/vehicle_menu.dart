@@ -8,8 +8,8 @@ import 'package:parking_cli/repositories/person_repository.dart';
 import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 
-void vehicleMenu(String menuType) {
-  final vehicleRepo = VehicleRepository();
+Future<void> vehicleMenu(String menuType) async {
+ 
 
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()}. Please choose 1-5:',
@@ -27,16 +27,16 @@ void vehicleMenu(String menuType) {
     int? choice = getNumberInput();
     switch (choice) {
       case 1:
-        addVehicle(vehicleRepo);
+        await addVehicle();
         break;
       case 2:
-        showVehicles(vehicleRepo);
+        await showVehicles();
         break;
       case 3:
-        updateVehicle(vehicleRepo);
+        await updateVehicle();
         break;
       case 4:
-        deleteVehicle(vehicleRepo);
+        await deleteVehicle();
         break;
       case 5:
         clearScreen();
@@ -49,8 +49,8 @@ void vehicleMenu(String menuType) {
   }
 }
 
-void deleteVehicle(VehicleRepository vehicleRepo) {
-  var vehicles = showVehicles(vehicleRepo);
+Future<void> deleteVehicle() async {
+  var vehicles = await showVehicles();
   if (vehicles.isNotEmpty) {
     displayInfo('Please enter index to delete: ');
     var index = getNumberInput();
@@ -61,7 +61,7 @@ void deleteVehicle(VehicleRepository vehicleRepo) {
       var str = getTextInput();
 
       if (str != null && str.toLowerCase() == 'y') {
-        vehicleRepo.removeVehicle(vehicle);
+        VehicleRepository().delete(vehicle);
       }
     }
   } else {
@@ -69,8 +69,8 @@ void deleteVehicle(VehicleRepository vehicleRepo) {
   }
 }
 
-void updateVehicle(VehicleRepository vehicleRepo) {
-  var vehicles = showVehicles(vehicleRepo);
+Future<void> updateVehicle() async {
+  var vehicles = await showVehicles();
   if (vehicles.isNotEmpty) {
     displayInfo(
         'Please choose index of Vehicle (${vehicles.length == 1 ? '0' : '0-${vehicles.length - 1}'})');
@@ -98,7 +98,7 @@ void updateVehicle(VehicleRepository vehicleRepo) {
         }
       } else if (choice == 3) {
         displayInfo('Update Owner');
-        var persons = getPersons();
+        var persons = await getPersons();
         Person updatedOwner;
 
         if (persons.isNotEmpty) {
@@ -117,19 +117,19 @@ void updateVehicle(VehicleRepository vehicleRepo) {
       } else {
         displayWarning('Invalid choice');
       }
-      showVehicles(vehicleRepo);
+      showVehicles();
     }
   } else {
     print('Nothing to update');
   }
 }
 
-List<Person> getPersons() {
-  return PersonRepository().allPersons;
+Future<List<Person>> getPersons() async {
+  return await PersonRepository().getAll();
 }
 
-void addVehicle(VehicleRepository vehicleRepo) {
-  List<Person> persons = getPersons();
+Future<void> addVehicle() async {
+  List<Person> persons = await getPersons();
   Person person;
 
   if (persons.isNotEmpty) {
@@ -151,7 +151,7 @@ void addVehicle(VehicleRepository vehicleRepo) {
             owner: person,
             vehicleType: vehicleType);
 
-        vehicleRepo.addVehicle(v);
+        VehicleRepository().add(v);
       }
     }
   } else {
@@ -184,13 +184,13 @@ VehicleType? chooseVehicleType() {
   return null;
 }
 
-List<Vehicle> showVehicles(VehicleRepository vehicleRepo) {
-  List<Vehicle> vehicles = vehicleRepo.allVehicles;
+Future<List<Vehicle>> showVehicles() async {
+  List<Vehicle> vehicles = await VehicleRepository().getAll();
   if (vehicles.isNotEmpty) {
-    for (int i = 0; i < vehicles.length; i++) {
-      var vehicle = vehicles[i];
+    for (int index = 0; index < vehicles.length; index++) {
+      var vehicle = vehicles[index];
       print(
-          'Index $i: Type: ${vehicle.vehicleType.name} LicensePlate: ${vehicle.licensePlate} Owner: ${vehicle.owner.name}');
+          'Index $index: Type: ${vehicle.vehicleType.name} LicensePlate: ${vehicle.licensePlate} Owner: ${vehicle.owner.name}');
     }
   } else {
     print('No vehicles registered');

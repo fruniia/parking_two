@@ -8,8 +8,7 @@ import 'package:parking_cli/repositories/parkingspace_repository.dart';
 import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 
-void parkingMenu(String menuType) {
-  final parkingRepo = ParkingRepository();
+Future<void> parkingMenu(String menuType) async {
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()}. Please choose 1-5:',
       {
@@ -26,16 +25,16 @@ void parkingMenu(String menuType) {
     int? choice = getNumberInput();
     switch (choice) {
       case 1:
-        addParking(parkingRepo);
+        await addParking();
         break;
       case 2:
-        showParkings(parkingRepo);
+        await showParkings();
         break;
       case 3:
-        updateParking(parkingRepo);
+        await updateParking();
         break;
       case 4:
-        deleteParking(parkingRepo);
+        await deleteParking();
         break;
       case 5:
         clearScreen();
@@ -48,16 +47,16 @@ void parkingMenu(String menuType) {
   }
 }
 
-List<Vehicle> getVehicles() {
-  return VehicleRepository().allVehicles;
+Future<List<Vehicle>> getVehicles() async {
+  return await VehicleRepository().getAll();
 }
 
-List<ParkingSpace> getParkingSpaces() {
-  return ParkingSpaceRepository().allParkingSpaces;
+Future<List<ParkingSpace>> getParkingSpaces() async {
+  return await ParkingSpaceRepository().getAll();
 }
 
-void deleteParking(ParkingRepository parkingRepo) {
-  var parkings = showParkings(parkingRepo);
+Future<void> deleteParking() async {
+  var parkings = await showParkings();
   if (parkings.isNotEmpty) {
     displayInfo('Please enter index to delete:');
     var index = getNumberInput();
@@ -68,7 +67,7 @@ void deleteParking(ParkingRepository parkingRepo) {
       var str = getTextInput();
 
       if (str != null && str.toLowerCase() == 'y') {
-        parkingRepo.removeParking(parking);
+        ParkingRepository().delete(parking);
       }
     }
   } else {
@@ -76,8 +75,8 @@ void deleteParking(ParkingRepository parkingRepo) {
   }
 }
 
-void updateParking(ParkingRepository parkingRepo) {
-  var parkings = showParkings(parkingRepo);
+Future<void> updateParking() async {
+  var parkings = await showParkings();
   if (parkings.isNotEmpty) {
     displayInfo(
         'Please choose index of Parking ${parkings.length == 1 ? '0' : '0-${parkings.length - 1}'}');
@@ -87,12 +86,12 @@ void updateParking(ParkingRepository parkingRepo) {
     if (index != null) {
       var parkingToUpdate = parkings[index];
       print(
-          'What would you like to update? (1: Vehicle 2: ParkingSpace 3: StartTime 4:StopTime)');
+          'What would you like to update? (1: Vehicle 2: ParkingSpace 3: StartTime 4: StopTime)');
 
       int? choice = getNumberInput();
       if (choice == 1) {
         displayInfo('Update vehicle');
-        var vehicles = getVehicles();
+        var vehicles = await getVehicles();
         Vehicle vehicleUpdate;
 
         if (vehicles.isNotEmpty) {
@@ -110,7 +109,7 @@ void updateParking(ParkingRepository parkingRepo) {
         }
       } else if (choice == 2) {
         displayInfo('Update parkingspace');
-        var parkingSpaces = getParkingSpaces();
+        var parkingSpaces = await getParkingSpaces();
         ParkingSpace parkingSpaceUpdate;
 
         if (parkingSpaces.isNotEmpty) {
@@ -194,9 +193,9 @@ int? updateHour() {
   return year;
 }
 
-void addParking(ParkingRepository parkingRepo) {
-  List<Vehicle> vehicles = getVehicles();
-  List<ParkingSpace> parkingSpaces = getParkingSpaces();
+Future<void> addParking() async {
+  List<Vehicle> vehicles = await getVehicles();
+  List<ParkingSpace> parkingSpaces = await getParkingSpaces();
   Vehicle? vehicle;
   ParkingSpace? parkingSpace;
   if (vehicles.isNotEmpty && parkingSpaces.isNotEmpty) {
@@ -223,7 +222,7 @@ void addParking(ParkingRepository parkingRepo) {
         vehicle: vehicle,
         parkingSpace: parkingSpace,
       );
-      parkingRepo.addParking(p);
+      await ParkingRepository().add(p);
       displaySuccess('Parking added successfully');
     } else {
       displayWarning('Vehicle or parking space selection is invalid');
@@ -239,8 +238,8 @@ void addParking(ParkingRepository parkingRepo) {
   }
 }
 
-List<Parking> showParkings(ParkingRepository parkingRepo) {
-  List<Parking> parkings = parkingRepo.allParkings;
+Future<List<Parking>> showParkings() async {
+  List<Parking> parkings = await ParkingRepository().getAll();
   if (parkings.isNotEmpty) {
     for (int i = 0; i < parkings.length; i++) {
       var parking = parkings[i];

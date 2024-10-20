@@ -5,8 +5,7 @@ import 'package:parking_cli/models/person.dart';
 import 'package:parking_cli/repositories/person_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 
-void personMenu(String menuType) {
-  final personRepo = PersonRepository();
+Future<void> personMenu(String menuType) async {
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()} Please choose 1-5:',
       {
@@ -23,16 +22,16 @@ void personMenu(String menuType) {
     int? choice = getNumberInput();
     switch (choice) {
       case 1:
-        addPerson(personRepo);
+        await addPerson();
         break;
       case 2:
-        showPersons(personRepo);
+        await showPersons();
         break;
       case 3:
-        updatePerson(personRepo);
+        await updatePerson();
         break;
       case 4:
-        deletePerson(personRepo);
+        await deletePerson();
         break;
       case 5:
         clearScreen();
@@ -45,8 +44,8 @@ void personMenu(String menuType) {
   }
 }
 
-void deletePerson(PersonRepository personRepo) {
-  var persons = showPersons(personRepo);
+Future<void> deletePerson() async {
+  var persons = await showPersons();
   if (persons.isNotEmpty) {
     displayInfo('Please enter index to delete?');
     var index = getNumberInput();
@@ -55,7 +54,7 @@ void deletePerson(PersonRepository personRepo) {
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
       if (str != null && str.toLowerCase() == 'y') {
-        personRepo.removePerson(del);
+        await PersonRepository().delete(del);
       }
     }
   } else {
@@ -63,8 +62,8 @@ void deletePerson(PersonRepository personRepo) {
   }
 }
 
-void updatePerson(PersonRepository personRepo) {
-  var persons = showPersons(personRepo);
+Future<void> updatePerson() async {
+  var persons = await showPersons();
   if (persons.isNotEmpty) {
     displayInfo(
         'Please choose index (${persons.length == 1 ? '0' : '0-${persons.length - 1}'})');
@@ -84,7 +83,7 @@ void updatePerson(PersonRepository personRepo) {
               id: personToUpdate.id,
               name: newName,
               socialSecNumber: personToUpdate.socialSecNumber);
-          personRepo.updatePerson(index, newPerson);
+          await PersonRepository().update(index, newPerson);
         } else {
           displayInfo('No update.');
         }
@@ -95,14 +94,14 @@ void updatePerson(PersonRepository personRepo) {
   }
 }
 
-void addPerson(PersonRepository personRepo) {
+Future<void> addPerson() async {
   displayInfo("Enter your name:");
   var newName = getTextInput();
   var ssn = setSocSecNum();
 
-  if (newName != null) {
-    Person p = Person.withUUID(name: newName, socialSecNumber: ssn);
-    personRepo.addPerson(p);
+  if (newName != null && ssn != '') {
+    Person person = Person.withUUID(name: newName, socialSecNumber: ssn);
+    await PersonRepository().add(person);
   } else {
     displayWarning('Nope!');
   }
@@ -124,12 +123,13 @@ String setSocSecNum() {
   return ssn ?? '';
 }
 
-List<Person> showPersons(PersonRepository personRepo) {
-  List<Person> persons = personRepo.allPersons;
+Future<List<Person>> showPersons() async {
+  List<Person> persons = await PersonRepository().getAll();
   if (persons.isNotEmpty) {
-    for (int i = 0; i < persons.length; i++) {
-      var person = persons[i];
-      print('Index $i: Name: ${person.name} SSN: ${person.socialSecNumber}');
+    for (int index = 0; index < persons.length; index++) {
+      var person = persons[index];
+      print(
+          'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
     }
   } else {
     print('No persons registered');

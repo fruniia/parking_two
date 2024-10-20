@@ -6,26 +6,27 @@ class Parking {
   String id;
   Vehicle vehicle;
   ParkingSpace parkingSpace;
-  DateTime start = DateTime.now();
-  DateTime? stop;
+  DateTime _start = DateTime.now();
+  DateTime? _stop;
 
   void updateStart(DateTime newStart) {
-    start = newStart;
+    _start = newStart;
   }
 
   void updateStop(DateTime newStop) {
-    stop = newStop;
+    _stop = newStop;
   }
+
+  DateTime? get stop => _stop;
+  DateTime get start => _start;
 
   Parking(
       {required this.id,
       required this.vehicle,
-      required this.parkingSpace,
-      this.stop});
+      required this.parkingSpace});
 
   Parking.withUUID({
     required this.vehicle,
     required this.parkingSpace,
-    this.stop,
   }) : id = Uuid().v4();
 }

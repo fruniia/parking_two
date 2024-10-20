@@ -6,7 +6,7 @@ import 'package:parking_cli/person_menu.dart';
 import 'package:parking_cli/utils/utils.dart';
 import 'package:parking_cli/vehicle_menu.dart';
 
-void startMenu() {
+Future<void> startMenu() async {
   final startMenu = Menu(
       'Welcome to the parking app \nWhat do you want to handle? (Choose: 1-5)',
       {
@@ -24,16 +24,16 @@ void startMenu() {
     int? choice = startMenu.getUserChoice();
     switch (choice) {
       case 1:
-        personMenu('persons');
+       await personMenu('persons');
         break;
       case 2:
-        vehicleMenu('vehicles');
+        await vehicleMenu('vehicles');
         break;
       case 3:
-        parkingSpaceMenu('parkingspaces');
+        await parkingSpaceMenu('parkingspaces');
         break;
       case 4:
-        parkingMenu('parkings');
+        await parkingMenu('parkings');
         break;
       case 5:
         running = quit();
