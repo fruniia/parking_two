@@ -1,5 +1,4 @@
-import 'package:parking_cli/models/vehicle.dart';
-import 'package:parking_cli/repositories/repository.dart';
+import 'package:parking_cli_shared/parking_cli_shared.dart';
 
 class VehicleRepository extends Repository<Vehicle> {
   VehicleRepository._privateConstructor();

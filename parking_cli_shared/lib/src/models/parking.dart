@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
-import 'package:parking_cli/models/parking_space.dart';
-import 'package:parking_cli/models/vehicle.dart';
+import 'parking_space.dart';
+import 'vehicle.dart';
 
 class Parking {
   String id;

@@ -1,11 +1,8 @@
 import 'dart:io';
 
-import 'package:parking_cli/enums/vehicle_type.dart';
+import 'package:parking_cli_shared/parking_cli_shared.dart';
+
 import 'package:parking_cli/menu.dart';
-import 'package:parking_cli/models/person.dart';
-import 'package:parking_cli/models/vehicle.dart';
-import 'package:parking_cli/repositories/person_repository.dart';
-import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 
 Future<void> vehicleMenu(String menuType) async {
