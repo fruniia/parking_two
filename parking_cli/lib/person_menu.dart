@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:parking_cli/menu.dart';
-import 'package:parking_cli/models/person.dart';
-import 'package:parking_cli/repositories/person_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
+import 'package:parking_cli_shared/parking_cli_shared.dart';
 
 Future<void> personMenu(String menuType) async {
   final subMenu = Menu(

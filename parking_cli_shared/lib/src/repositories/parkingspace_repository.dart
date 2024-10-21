@@ -1,5 +1,4 @@
-import 'package:parking_cli/models/parking_space.dart';
-import 'package:parking_cli/repositories/repository.dart';
+import 'package:parking_cli_shared/parking_cli_shared.dart';
 
 class ParkingSpaceRepository extends Repository<ParkingSpace> {
   ParkingSpaceRepository._privateConstructor();

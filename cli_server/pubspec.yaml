@@ -2,6 +2,7 @@ name: cli_server
 description: A server app using the shelf package and Docker.
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
+publish_to: none
 
 environment:
   sdk: ^3.5.3
@@ -11,6 +12,8 @@ dependencies:
   shelf: ^1.4.0
   shelf_router: ^1.1.0
   uuid: ^4.4.2
+  parking_cli_shared:
+    path: '../parking_cli_shared'
 
 dev_dependencies:
   http: ^1.1.0

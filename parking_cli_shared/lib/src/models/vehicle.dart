@@ -1,6 +1,5 @@
+import 'package:parking_cli_shared/parking_cli_shared.dart';
 import 'package:uuid/uuid.dart';
-import 'package:parking_cli/enums/vehicle_type.dart';
-import 'package:parking_cli/models/person.dart';
 
 class Vehicle {
   String id;
