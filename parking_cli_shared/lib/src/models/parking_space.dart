@@ -21,5 +21,4 @@ class ParkingSpace {
   Map<String, dynamic> toJson() {
     return {'id': id, 'address': address, 'pricePerHour': pricePerHour};
   }
-
 }
