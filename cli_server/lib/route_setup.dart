@@ -28,6 +28,6 @@ class ServerSetup {
     router.get('/vehicles', getVehiclesHandler);
     router.get('/vehicles/<id>', getVehicleHandler);
     router.put('/vehicles/<id>', putVehiclesHandler);
-    router.delete('/vehicles/<id>', deletePersonHandler);
+    router.delete('/vehicles/<id>', deleteVehicleHandler);
   }
 }
