@@ -14,9 +14,9 @@ dependencies:
   uuid: ^4.4.2
   parking_cli_shared:
     path: '../parking_cli_shared'
+  http: ^1.1.0
 
 dev_dependencies:
-  http: ^1.1.0
   lints: ^4.0.0
   test: ^1.24.0
 
