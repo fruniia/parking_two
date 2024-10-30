@@ -23,7 +23,11 @@ class ServerSetup {
     router.put('/persons/<id>', putPersonsHandler);
     router.delete('/persons/<id>', deletePersonHandler);
 
+    //-- Vehicles --
     router.post('/vehicles', postVehicleHandler);
     router.get('/vehicles', getVehiclesHandler);
+    router.get('/vehicles/<id>', getVehicleHandler);
+    router.put('/vehicles/<id>', putVehiclesHandler);
+    router.delete('/vehicles/<id>', deletePersonHandler);
   }
 }

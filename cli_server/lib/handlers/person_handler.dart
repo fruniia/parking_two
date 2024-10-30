@@ -12,18 +12,8 @@ Future<Response> postPersonHandler(Request req) async {
     final data = await req.readAsString();
     final json = jsonDecode(data);
 
-    final name = json["name"];
-    final ssn = json["socialSecNumber"];
+    Person? person = Person.fromJson(json);
 
-    if (name == null || ssn == null) {
-      return Response.badRequest(
-        body: jsonEncode(
-            {'error': 'Name and Social security number must not be null'}),
-        headers: {'Content-Type': 'application/json'},
-      );
-    }
-
-    Person? person = Person.withUUID(name: name, socialSecNumber: ssn);
     person = await personRepo.add(person);
 
     return Response.ok(jsonEncode(person),

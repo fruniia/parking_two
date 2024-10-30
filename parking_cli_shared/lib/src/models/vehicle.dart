@@ -24,15 +24,15 @@ class Vehicle {
         id: json['id'],
         licensePlate: json['licensePlate'],
         owner: Person.fromJson(json['owner']),
-        vehicleType: json['vehicleType']);
+        vehicleType: VehicleTypeExtension.fromShortString(json['vehicleType']));
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'licenseplate': licensePlate,
+      'licensePlate': licensePlate,
       'owner': owner.toJson(),
-      'vehicleType': vehicleType.toString()
+      'vehicleType': vehicleType.toShortString(),
     };
   }
 }
