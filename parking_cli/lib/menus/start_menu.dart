@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:parking_cli/menu.dart';
-import 'package:parking_cli/parking_menu.dart';
-import 'package:parking_cli/parking_space_menu.dart';
-import 'package:parking_cli/person_menu.dart';
+import 'package:parking_cli/menus/menu.dart';
+import 'package:parking_cli/menus/parking_menu.dart';
+import 'package:parking_cli/menus/parking_space_menu.dart';
+import 'package:parking_cli/menus/person_menu.dart';
 import 'package:parking_cli/utils/utils.dart';
-import 'package:parking_cli/vehicle_menu.dart';
+import 'package:parking_cli/menus/vehicle_menu.dart';
 
 Future<void> startMenu() async {
   final startMenu = Menu(

@@ -1,7 +1,16 @@
+import 'package:parking_cli/repositories/parking_repository.dart';
+import 'package:parking_cli/repositories/parkingspace_repository.dart';
+import 'package:parking_cli/repositories/person_repository.dart';
+import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli_shared/parking_cli_shared.dart';
 
-import 'package:parking_cli/menu.dart';
+import 'package:parking_cli/menus/menu.dart';
 import 'package:parking_cli/utils/utils.dart';
+
+PersonRepository personRepos = PersonRepository();
+VehicleRepository vehicleRepos = VehicleRepository();
+ParkingSpaceRepository parkingSpaceRepos = ParkingSpaceRepository();
+ParkingRepository parkingRepos = ParkingRepository();
 
 Future<void> parkingMenu(String menuType) async {
   final subMenu = Menu(
@@ -43,11 +52,11 @@ Future<void> parkingMenu(String menuType) async {
 }
 
 Future<List<Vehicle>> getVehicles() async {
-  return await VehicleRepository().getAll();
+  return await vehicleRepos.getAll();
 }
 
 Future<List<ParkingSpace>> getParkingSpaces() async {
-  return await ParkingSpaceRepository().getAll();
+  return await parkingSpaceRepos.getAll();
 }
 
 Future<void> deleteParking() async {
@@ -57,12 +66,11 @@ Future<void> deleteParking() async {
     var index = getNumberInput();
 
     if (index != null && index >= 0 && index < parkings.length) {
-      var parking = parkings[index];
       displayWarning('Do you really want to delete');
       var str = getTextInput();
 
       if (str != null && str.toLowerCase() == 'y') {
-        ParkingRepository().delete(parking);
+        parkingRepos.delete(parkings[index].id);
       }
     }
   } else {
@@ -147,8 +155,8 @@ Future<void> updateParking() async {
           minute ??= DateTime.now().minute;
           parkingToUpdate.updateStart(DateTime(year, month, day, hour, minute));
         }
-      } else if(choice == 4){
-                displayInfo('Update stopTime');
+      } else if (choice == 4) {
+        displayInfo('Update stopTime');
         for (int i = 0; i < parkings.length; i++) {
           print(
               '$i ${parkings[i].start.year}-${parkings[i].start.month}-${parkings[i].start.day} ${parkings[i].start.hour.toString().padLeft(2, '0')}:${parkings[i].start.minute.toString().padLeft(2, '0')}');
@@ -175,8 +183,7 @@ Future<void> updateParking() async {
           minute ??= DateTime.now().minute;
           parkingToUpdate.updateStop(DateTime(year, month, day, hour, minute));
         }
-
-      }else {
+      } else {
         displayWarning('Invalid choice');
       }
     }
@@ -217,7 +224,7 @@ Future<void> addParking() async {
         vehicle: vehicle,
         parkingSpace: parkingSpace,
       );
-      await ParkingRepository().add(p);
+      await parkingRepos.add(p);
       displaySuccess('Parking added successfully');
     } else {
       displayWarning('Vehicle or parking space selection is invalid');
@@ -234,7 +241,7 @@ Future<void> addParking() async {
 }
 
 Future<List<Parking>> showParkings() async {
-  List<Parking> parkings = await ParkingRepository().getAll();
+  List<Parking> parkings = await parkingRepos.getAll();
   if (parkings.isNotEmpty) {
     for (int i = 0; i < parkings.length; i++) {
       var parking = parkings[i];

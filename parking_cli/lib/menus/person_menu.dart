@@ -1,8 +1,11 @@
 import 'dart:io';
 
-import 'package:parking_cli/menu.dart';
+import 'package:parking_cli/menus/menu.dart';
+import 'package:parking_cli/repositories/person_repository.dart';
 import 'package:parking_cli/utils/utils.dart';
 import 'package:parking_cli_shared/parking_cli_shared.dart';
+
+PersonRepository personRepos = PersonRepository();
 
 Future<void> personMenu(String menuType) async {
   final subMenu = Menu(
@@ -49,11 +52,11 @@ Future<void> deletePerson() async {
     displayInfo('Please enter index to delete?');
     var index = getNumberInput();
     if (index != null && index >= 0 && index < persons.length) {
-      var del = persons[index];
+      //var del = persons[index];
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
       if (str != null && str.toLowerCase() == 'y') {
-        await PersonRepository().delete(del);
+        await personRepos.delete(persons[index].id);
       }
     }
   } else {
@@ -82,7 +85,7 @@ Future<void> updatePerson() async {
               id: personToUpdate.id,
               name: newName,
               socialSecNumber: personToUpdate.socialSecNumber);
-          await PersonRepository().update(index, newPerson);
+          await personRepos.update(personToUpdate.id, newPerson);
         } else {
           displayInfo('No update.');
         }
@@ -100,7 +103,7 @@ Future<void> addPerson() async {
 
   if (newName != null && ssn != '') {
     Person person = Person.withUUID(name: newName, socialSecNumber: ssn);
-    await PersonRepository().add(person);
+    await personRepos.add(person);
   } else {
     displayWarning('Nope!');
   }
@@ -123,17 +126,19 @@ String setSocSecNum() {
 }
 
 Future<List<Person>> showPersons() async {
-  List<Person> persons = await PersonRepository().getAll();
-  if (persons.isNotEmpty) {
-    for (int index = 0; index < persons.length; index++) {
-      var person = persons[index];
-      print(
-          'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
-    }
+  List<Person> persons = await personRepos.getAll();
+    if (persons.isNotEmpty) {
+      for (int index = 0; index < persons.length; index++) {
+        var person = persons[index];
+        print(
+            'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
+      }
+    return persons;
+    
   } else {
     print('No persons registered');
+    return [];
   }
-  return persons;
 }
 
 bool isValidLuhn(String ssn) {

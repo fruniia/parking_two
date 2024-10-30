@@ -14,6 +14,8 @@ dependencies:
   # path: ^1.8.0
   parking_cli_shared:
     path: '../parking_cli_shared'
+  cli_server:
+    path: '../cli_server'
 
 dev_dependencies:
   lints: ^4.0.0

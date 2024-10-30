@@ -1,6 +1,7 @@
+import 'package:parking_cli/repositories/parkingspace_repository.dart';
 import 'package:parking_cli_shared/parking_cli_shared.dart';
 
-import 'package:parking_cli/menu.dart';
+import 'package:parking_cli/menus/menu.dart';
 import 'package:parking_cli/utils/utils.dart';
 
 Future<void> parkingSpaceMenu(String menuType) async {
@@ -51,11 +52,10 @@ Future<void> deleteParkingSpaces() async {
     var index = getNumberInput();
 
     if (index != null && index >= 0 && index < parkingSpaces.length) {
-      var parkingSpace = parkingSpaces[index];
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
       if (str != null && str.toLowerCase() == 'y') {
-        ParkingSpaceRepository().delete(parkingSpace);
+        ParkingSpaceRepository().delete(parkingSpaces[index].id);
       }
     }
   } else {

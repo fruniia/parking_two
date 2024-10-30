@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:parking_cli/repositories/person_repository.dart';
+import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli_shared/parking_cli_shared.dart';
 
-import 'package:parking_cli/menu.dart';
+import 'package:parking_cli/menus/menu.dart';
 import 'package:parking_cli/utils/utils.dart';
 
-Future<void> vehicleMenu(String menuType) async {
- 
+PersonRepository personRepos = PersonRepository();
+VehicleRepository vehicleRepository = VehicleRepository();
 
+Future<void> vehicleMenu(String menuType) async {
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()}. Please choose 1-5:',
       {
@@ -53,12 +56,11 @@ Future<void> deleteVehicle() async {
     var index = getNumberInput();
 
     if (index != null && index >= 0 && index < vehicles.length) {
-      var vehicle = vehicles[index];
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
 
       if (str != null && str.toLowerCase() == 'y') {
-        VehicleRepository().delete(vehicle);
+        vehicleRepository.delete(vehicles[index].id);
       }
     }
   } else {
@@ -122,7 +124,7 @@ Future<void> updateVehicle() async {
 }
 
 Future<List<Person>> getPersons() async {
-  return await PersonRepository().getAll();
+  return await personRepos.getAll();
 }
 
 Future<void> addVehicle() async {
@@ -148,7 +150,7 @@ Future<void> addVehicle() async {
             owner: person,
             vehicleType: vehicleType);
 
-        VehicleRepository().add(v);
+        vehicleRepository.add(v);
       }
     }
   } else {
@@ -182,7 +184,7 @@ VehicleType? chooseVehicleType() {
 }
 
 Future<List<Vehicle>> showVehicles() async {
-  List<Vehicle> vehicles = await VehicleRepository().getAll();
+  List<Vehicle> vehicles = await vehicleRepository.getAll();
   if (vehicles.isNotEmpty) {
     for (int index = 0; index < vehicles.length; index++) {
       var vehicle = vehicles[index];
