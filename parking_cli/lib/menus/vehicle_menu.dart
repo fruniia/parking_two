@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cli_server/handlers/vehicle_handler.dart';
 import 'package:parking_cli/repositories/person_repository.dart';
 import 'package:parking_cli/repositories/vehicle_repository.dart';
 import 'package:parking_cli_shared/parking_cli_shared.dart';
@@ -11,6 +12,7 @@ PersonRepository personRepos = PersonRepository();
 VehicleRepository vehicleRepository = VehicleRepository();
 
 Future<void> vehicleMenu(String menuType) async {
+  clearScreen();
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()}. Please choose 1-5:',
       {
@@ -60,7 +62,7 @@ Future<void> deleteVehicle() async {
       var str = getTextInput();
 
       if (str != null && str.toLowerCase() == 'y') {
-        vehicleRepository.delete(vehicles[index].id);
+       await vehicleRepository.delete(vehicles[index].id);
       }
     }
   } else {
@@ -116,7 +118,7 @@ Future<void> updateVehicle() async {
       } else {
         displayWarning('Invalid choice');
       }
-      showVehicles();
+      await vehicleRepo.update(vehicleToUpdate.id, vehicleToUpdate);
     }
   } else {
     print('Nothing to update');
@@ -150,7 +152,7 @@ Future<void> addVehicle() async {
             owner: person,
             vehicleType: vehicleType);
 
-        vehicleRepository.add(v);
+        await vehicleRepository.add(v);
       }
     }
   } else {

@@ -8,6 +8,7 @@ import 'package:parking_cli_shared/parking_cli_shared.dart';
 PersonRepository personRepos = PersonRepository();
 
 Future<void> personMenu(String menuType) async {
+  clearScreen();
   final subMenu = Menu(
       'You have choosen to handle ${menuType.toUpperCase()} Please choose 1-5:',
       {
@@ -52,7 +53,6 @@ Future<void> deletePerson() async {
     displayInfo('Please enter index to delete?');
     var index = getNumberInput();
     if (index != null && index >= 0 && index < persons.length) {
-      //var del = persons[index];
       displayWarning('Do you really want to delete?');
       var str = getTextInput();
       if (str != null && str.toLowerCase() == 'y') {
@@ -127,14 +127,13 @@ String setSocSecNum() {
 
 Future<List<Person>> showPersons() async {
   List<Person> persons = await personRepos.getAll();
-    if (persons.isNotEmpty) {
-      for (int index = 0; index < persons.length; index++) {
-        var person = persons[index];
-        print(
-            'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
-      }
+  if (persons.isNotEmpty) {
+    for (int index = 0; index < persons.length; index++) {
+      var person = persons[index];
+      print(
+          'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
+    }
     return persons;
-    
   } else {
     print('No persons registered');
     return [];
