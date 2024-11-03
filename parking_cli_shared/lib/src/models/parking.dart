@@ -1,6 +1,5 @@
+import 'package:parking_cli_shared/parking_cli_shared.dart';
 import 'package:uuid/uuid.dart';
-import 'parking_space.dart';
-import 'vehicle.dart';
 
 class Parking {
   String id;
@@ -29,18 +28,27 @@ class Parking {
   }) : id = Uuid().v4();
 
   factory Parking.fromJson(Map<String, dynamic> json) {
-    return Parking(
+    var parking = Parking(
       id: json['id'],
-      vehicle: json['vehicle'],
-      parkingSpace: json['parkingSpace'],
+      vehicle: Vehicle.fromJson(json['vehicle']),
+      parkingSpace: ParkingSpace.fromJson(json['parkingSpace']),
     );
+
+    parking.updateStart(DateTime.parse(json['start']));
+
+    if (json['stop'] != null) {
+      parking.updateStop(DateTime.parse(json['stop']));
+    } 
+    return parking;
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'vehicle': vehicle.toJson(),
-      'parkingSpace': parkingSpace.toJson()
+      'parkingSpace': parkingSpace.toJson(),
+      'start': _start.toIso8601String(), //Convert to string
+      'stop': _stop?.toIso8601String(), //Convert to string, could be null
     };
   }
 }
