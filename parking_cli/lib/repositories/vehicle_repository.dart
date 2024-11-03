@@ -13,7 +13,9 @@ class VehicleRepository implements InterfaceRepository<Vehicle> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return (data as List).map((person) => Vehicle.fromJson(person)).toList();
+      return (data as List)
+          .map((vehicle) => Vehicle.fromJson(vehicle))
+          .toList();
     }
     throw Exception('Failed to load vehicles');
   }
@@ -67,13 +69,18 @@ class VehicleRepository implements InterfaceRepository<Vehicle> {
   @override
   Future<Vehicle?> update(String id, Vehicle newVechicle) async {
     final uri = Uri.parse('$baseUrl/$id');
-
+    print(newVechicle.toJson());
     final response = await http.put(uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(newVechicle.toJson()));
 
-    final json = jsonDecode(response.body);
-
-    return Vehicle.fromJson(json);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      print('Response: ${response.body}');
+      return Vehicle.fromJson(json);
+    } else {
+      print('Failed to load vehicle: ${response.statusCode} - ${response.body}');
+      return null;
+    }
   }
 }
