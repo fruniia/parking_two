@@ -1,3 +1,5 @@
+import 'package:cli_server/handlers/parking_handler.dart';
+import 'package:cli_server/handlers/parking_space_handler.dart';
 import 'package:cli_server/handlers/person_handler.dart';
 import 'package:cli_server/handlers/vehicle_handler.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -20,14 +22,28 @@ class ServerSetup {
     router.get('/persons', getPersonsHandler);
     router.get('/persons/<id>', getPersonHandler);
     router.post('/persons', postPersonHandler);
-    router.put('/persons/<id>', putPersonsHandler);
+    router.put('/persons/<id>', putPersonHandler);
     router.delete('/persons/<id>', deletePersonHandler);
 
     //-- Vehicles --
     router.post('/vehicles', postVehicleHandler);
     router.get('/vehicles', getVehiclesHandler);
     router.get('/vehicles/<id>', getVehicleHandler);
-    router.put('/vehicles/<id>', putVehiclesHandler);
+    router.put('/vehicles/<id>', putVehicleHandler);
     router.delete('/vehicles/<id>', deleteVehicleHandler);
+
+    //-- ParkingSpaces --
+    router.post('/parkingSpaces', postParkingSpaceHandler);
+    router.get('/parkingSpaces', getParkingSpacesHandler);
+    router.get('/parkingSpaces/<id>', getParkingSpaceHandler);
+    router.put('/parkingSpaces/<id>', putParkingSpaceHandler);
+    router.delete('/parkingSpaces/<id>', deleteParkingSpaceHandler);
+
+    //-- Parking --
+    router.post('/parkings', postParkingHandler);
+    router.get('/parkings', getParkingsHandler);
+    router.get('/parkings/<id>', getParkingHandler);
+    router.put('/parkings/<id>', putParkingHandler);
+    router.delete('/parkings/<id>', deleteParkingHandler);
   }
 }
