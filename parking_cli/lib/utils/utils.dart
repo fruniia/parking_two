@@ -30,3 +30,8 @@ String? getTextInput() {
   var input = stdin.readLineSync();
   return input ?? '';
 }
+
+Future<int?> getInput(String text) async {
+  displayInfo('Please enter $text:');
+  return getNumberInput();
+}
