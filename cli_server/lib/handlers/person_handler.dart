@@ -25,7 +25,7 @@ Future<Response> postPersonHandler(Request req) async {
   }
 }
 
-Future<Response> putPersonsHandler(Request req) async {
+Future<Response> putPersonHandler(Request req) async {
   final id = req.params['id'];
   final data = await req.readAsString();
 
