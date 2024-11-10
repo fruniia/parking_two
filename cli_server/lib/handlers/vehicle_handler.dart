@@ -118,7 +118,8 @@ Vehicle updateVehicle(Vehicle vehicle, String json) {
     vehicle.licensePlate = data['licensePlate'];
   }
   if (data['vehicleType'] != null) {
-    vehicle.vehicleType = VehicleTypeExtension.fromShortString(data['vehicleType']);
+    vehicle.vehicleType =
+        VehicleTypeExtension.fromShortString(data['vehicleType']);
   }
   if (data['owner'] != null) {
     vehicle.owner = Person.fromJson(data['owner']);

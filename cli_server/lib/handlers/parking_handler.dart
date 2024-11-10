@@ -115,15 +115,26 @@ Future<Response> deleteParkingHandler(Request req) async {
 
 Parking updateParking(Parking parking, String json) {
   var data = jsonDecode(json) as Map<String, dynamic>;
-  if (data['vehicle'] != null) {
-    parking.vehicle = data['vehicle'];
-  }
-  if (data['parkingSpace'] != null) {
-    parking.parkingSpace = data['parkingSpace'];
-  }
-  if (data['parkingSpace'] != null) {
-    parking.parkingSpace = data['parkingSpace'];
+  if (data.containsKey('vehicle')) {
+    parking.vehicle = Vehicle.fromJson(data['vehicle']);
   }
 
+  if (data.containsKey('parkingSpace')) {
+    parking.parkingSpace = ParkingSpace.fromJson(data['parkingSpace']);
+  }
+
+  if (data.containsKey('start')) {
+    var newStartTime = DateTime.parse(data['start']);
+    parking.updateStart(newStartTime);
+  }
+  
+  if (data.containsKey('stop')) {
+    if (data['stop'] != null) {
+      var newStopTime = DateTime.parse(data['stop']);
+      parking.updateStop(newStopTime);
+    } else {
+      parking.updateStop(null); // Set stop to null if it's explicitly null
+    }
+  }
   return parking;
 }

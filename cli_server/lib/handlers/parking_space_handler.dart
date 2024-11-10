@@ -118,6 +118,7 @@ ParkingSpace updateParkingSpace(ParkingSpace parkingSpace, String json) {
   if (data['address'] != null) {
     parkingSpace.address = data['address'];
   }
+  
   if (data['pricePerHour'] != null) {
     parkingSpace.pricePerHour = data['pricePerHour'];
   }
