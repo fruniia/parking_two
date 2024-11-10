@@ -12,12 +12,12 @@ class Parking {
     _start = newStart;
   }
 
-  void updateStop(DateTime newStop) {
+  void updateStop(DateTime? newStop) {
     _stop = newStop;
   }
 
-  DateTime? get stop => _stop;
   DateTime get start => _start;
+  DateTime? get stop => _stop;
 
   Parking(
       {required this.id, required this.vehicle, required this.parkingSpace});
@@ -38,17 +38,21 @@ class Parking {
 
     if (json['stop'] != null) {
       parking.updateStop(DateTime.parse(json['stop']));
-    } 
+    }
     return parking;
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> json = {
       'id': id,
       'vehicle': vehicle.toJson(),
       'parkingSpace': parkingSpace.toJson(),
-      'start': _start.toIso8601String(), //Convert to string
-      'stop': _stop?.toIso8601String(), //Convert to string, could be null
+      'start': _start.toIso8601String(),
     };
+
+    if (_stop != null) {
+      json['stop'] = _stop?.toIso8601String(); 
+    }
+    return json;
   }
 }
