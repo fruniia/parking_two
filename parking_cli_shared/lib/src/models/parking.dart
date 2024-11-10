@@ -1,6 +1,5 @@
+import 'package:parking_cli_shared/parking_cli_shared.dart';
 import 'package:uuid/uuid.dart';
-import 'parking_space.dart';
-import 'vehicle.dart';
 
 class Parking {
   String id;
@@ -13,12 +12,12 @@ class Parking {
     _start = newStart;
   }
 
-  void updateStop(DateTime newStop) {
+  void updateStop(DateTime? newStop) {
     _stop = newStop;
   }
 
-  DateTime? get stop => _stop;
   DateTime get start => _start;
+  DateTime? get stop => _stop;
 
   Parking(
       {required this.id, required this.vehicle, required this.parkingSpace});
@@ -29,18 +28,31 @@ class Parking {
   }) : id = Uuid().v4();
 
   factory Parking.fromJson(Map<String, dynamic> json) {
-    return Parking(
+    var parking = Parking(
       id: json['id'],
-      vehicle: json['vehicle'],
-      parkingSpace: json['parkingSpace'],
+      vehicle: Vehicle.fromJson(json['vehicle']),
+      parkingSpace: ParkingSpace.fromJson(json['parkingSpace']),
     );
+
+    parking.updateStart(DateTime.parse(json['start']));
+
+    if (json['stop'] != null) {
+      parking.updateStop(DateTime.parse(json['stop']));
+    }
+    return parking;
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> json = {
       'id': id,
       'vehicle': vehicle.toJson(),
-      'parkingSpace': parkingSpace.toJson()
+      'parkingSpace': parkingSpace.toJson(),
+      'start': _start.toIso8601String(),
     };
+
+    if (_stop != null) {
+      json['stop'] = _stop?.toIso8601String(); 
+    }
+    return json;
   }
 }

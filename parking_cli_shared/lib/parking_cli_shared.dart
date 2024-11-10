@@ -3,11 +3,7 @@
 /// More dartdocs go here.
 library;
 
-export 'src/repositories/parking_repository.dart';
-export 'src/repositories/parkingspace_repository.dart';
-export 'src/repositories/vehicle_repository.dart';
-export 'src/repositories/person_repository.dart';
-export 'src/repositories/repository.dart';
+export 'src/repositories/interface_repository.dart';
 
 export 'src/models/parking_space.dart';
 export 'src/models/parking.dart';
