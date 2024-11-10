@@ -10,7 +10,7 @@ class PersonManager {
       displayInfo('Please enter index to delete?');
       var index = getNumberInput();
       if (index != null && index >= 0 && index < persons.length) {
-        displayWarning('Do you really want to delete?');
+        displayWarning('Do you really want to delete? (Y/N)');
         var str = getTextInput();
         if (str != null && str.toLowerCase() == 'y') {
           await personRepos.delete(persons[index].id);

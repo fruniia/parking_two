@@ -12,7 +12,7 @@ class VehicleManager {
       var index = await getInput('index');
 
       if (index != null && index >= 0 && index < vehicles.length) {
-        displayWarning('Do you really want to delete?');
+        displayWarning('Do you really want to delete? (Y/N)');
         var str = getTextInput();
 
         if (str != null && str.toLowerCase() == 'y') {
@@ -34,7 +34,7 @@ class VehicleManager {
       if (index != null && index >= 0 && index < vehicles.length) {
         var vehicleToUpdate = vehicles[index];
         print(
-            'What would you like to update? (1:Licenseplate 2:VehicleType 3:Owner)');
+            'What would you like to update?\n1:Licenseplate 2:VehicleType 3:Owner');
         int? choice = getNumberInput();
 
         if (choice == 1) {

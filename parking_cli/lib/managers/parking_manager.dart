@@ -25,7 +25,7 @@ class ParkingManager {
       var index = await getInput('index');
 
       if (index != null && index >= 0 && index < parkings.length) {
-        displayWarning('Do you really want to delete');
+        displayWarning('Do you really want to delete? (Y/N)');
         var str = getTextInput();
 
         if (str != null && str.toLowerCase() == 'y') {
@@ -43,90 +43,19 @@ class ParkingManager {
       var index = await getInput(
           'index of Parking ${parkings.length == 1 ? '0' : '0-${parkings.length - 1}'}');
 
-      if (index != null && index <= 0 && index < parkings.length) {
+      if (index != null && index >= 0 && index < parkings.length) {
         var parkingToUpdate = parkings[index];
 
         var choice = await getInput(
             'what you would like to update?\n(1: Vehicle 2: ParkingSpace 3: StartTime 4: StopTime)');
-
         if (choice == 1) {
-          displayInfo('Update vehicle');
-          var vehicles = await _getVehicles();
-          Vehicle vehicleUpdate;
-
-          if (vehicles.isNotEmpty) {
-            for (int i = 0; i < vehicles.length; i++) {
-              print('$i: ${vehicles[i].licensePlate}');
-            }
-
-            var num = await getInput('index');
-
-            if (num != null) {
-              vehicleUpdate = vehicles[num];
-              parkingToUpdate.vehicle = vehicleUpdate;
-            }
-          }
+          await _updateVehicle(parkingToUpdate);
         } else if (choice == 2) {
-          displayInfo('Update parkingspace');
-          var parkingSpaces = await _getParkingSpaces();
-          ParkingSpace parkingSpaceUpdate;
-
-          if (parkingSpaces.isNotEmpty) {
-            for (int i = 0; i < parkingSpaces.length; i++) {
-              print('$i: ${parkingSpaces[i].address}');
-            }
-
-            var num = await getInput('index');
-
-            if (num != null) {
-              parkingSpaceUpdate = parkingSpaces[num];
-              parkingToUpdate.parkingSpace = parkingSpaceUpdate;
-            }
-          }
+          await _updateParkingSpace(parkingToUpdate);
         } else if (choice == 3) {
-          displayInfo('Update starttime');
-          for (int i = 0; i < parkings.length; i++) {
-            print(
-                '$i ${parkings[i].start.year}-${parkings[i].start.month}-${parkings[i].start.day} ${parkings[i].start.hour.toString().padLeft(2, '0')}:${parkings[i].start.minute.toString().padLeft(2, '0')}');
-          }
-          var index = await getInput('index');
-
-          if (index != null && index < parkings.length) {
-            var year = await getInput('year (YYYY)');
-            var month = await getInput('month (MM)');
-            var day = await getInput('day (DD)');
-            var hour = await getInput('hour (HH))');
-            var minute = await getInput('minute (mm))');
-            year ??= DateTime.now().year;
-            month ??= DateTime.now().month;
-            day ??= DateTime.now().day;
-            hour ??= DateTime.now().hour;
-            minute ??= DateTime.now().minute;
-            parkingToUpdate
-                .updateStart(DateTime(year, month, day, hour, minute));
-          }
+          await _updateStartTime(parkingToUpdate);
         } else if (choice == 4) {
-          displayInfo('Update stopTime');
-          for (int i = 0; i < parkings.length; i++) {
-            print(
-                '$i ${parkings[i].start.year}-${parkings[i].start.month}-${parkings[i].start.day} ${parkings[i].start.hour.toString().padLeft(2, '0')}:${parkings[i].start.minute.toString().padLeft(2, '0')}');
-          }
-
-          var index = await getInput('index');
-          if (index != null && index < parkings.length) {
-            var year = await getInput('year (YYYY)');
-            var month = await getInput('month (MM)');
-            var day = await getInput('day (DD)');
-            var hour = await getInput('hour (HH))');
-            var minute = await getInput('minute (mm))');
-            year ??= DateTime.now().year;
-            month ??= DateTime.now().month;
-            day ??= DateTime.now().day;
-            hour ??= DateTime.now().hour;
-            minute ??= DateTime.now().minute;
-            parkingToUpdate
-                .updateStop(DateTime(year, month, day, hour, minute));
-          }
+          await _updateStopTime(parkingToUpdate);
         } else {
           displayWarning('Invalid choice');
         }
@@ -191,5 +120,79 @@ class ParkingManager {
       print('No parkings registered');
     }
     return parkings;
+  }
+
+  Future<void> _updateVehicle(Parking parking) async {
+    displayInfo('Update vehicle');
+    var vehicles = await _getVehicles();
+    if (vehicles.isNotEmpty) {
+      for (int i = 0; i < vehicles.length; i++) {
+        print('$i: ${vehicles[i].licensePlate}');
+      }
+      var num = await getInput('Select vehicle index');
+      if (num != null && num >= 0 && num < vehicles.length) {
+        parking.vehicle = vehicles[num];
+        await parkingRepos.update(parking.id, parking);
+        displayInfo('Vehicle updated');
+      }
+    }
+  }
+
+  Future<void> _updateParkingSpace(Parking parkingToUpdate) async {
+    displayInfo('Update parking space');
+    var parkingSpaces = await _getParkingSpaces();
+    if (parkingSpaces.isNotEmpty) {
+      for (int i = 0; i < parkingSpaces.length; i++) {
+        print('$i: ${parkingSpaces[i].address}');
+      }
+      var num = await getInput('Select parking space index');
+      if (num != null && num >= 0 && num < parkingSpaces.length) {
+        parkingToUpdate.parkingSpace = parkingSpaces[num];
+        await parkingRepos.update(parkingToUpdate.id, parkingToUpdate);
+        displayInfo('Parking space updated');
+      }
+    }
+  }
+
+  Future<void> _updateStartTime(Parking parking) async {
+    displayInfo('Update start time');
+    var year = await getInput('Year (YYYY)');
+    var month = await getInput('Month (MM)');
+    var day = await getInput('Day (DD)');
+    var hour = await getInput('Hour (HH)');
+    var minute = await getInput('Minute (mm)');
+
+    year ??= DateTime.now().year;
+    month ??= DateTime.now().month;
+    day ??= DateTime.now().day;
+    hour ??= DateTime.now().hour;
+    minute ??= DateTime.now().minute;
+
+    var startTime = DateTime(year, month, day, hour, minute, 0, 0, 0);
+    parking.updateStart(startTime);
+
+    await parkingRepos.update(parking.id, parking);
+    displayInfo('Start time updated');
+  }
+
+  Future<void> _updateStopTime(Parking parking) async {
+    displayInfo('Update stop time');
+    var year = await getInput('Year (YYYY)');
+    var month = await getInput('Month (MM)');
+    var day = await getInput('Day (DD)');
+    var hour = await getInput('Hour (HH)');
+    var minute = await getInput('Minute (mm)');
+
+    year ??= DateTime.now().year;
+    month ??= DateTime.now().month;
+    day ??= DateTime.now().day;
+    hour ??= DateTime.now().hour;
+    minute ??= DateTime.now().minute;
+
+    var stopTime = DateTime(year, month, day, hour, minute, 0, 0, 0);
+    parking.updateStop(stopTime);
+
+    await parkingRepos.update(parking.id, parking);
+    displayInfo('Stop time updated');
   }
 }
