@@ -57,7 +57,7 @@ class VehicleRepository implements InterfaceRepository<Vehicle> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Response: ${response.body}');
+
       return Vehicle.fromJson(data);
     } else {
       print(
@@ -69,14 +69,14 @@ class VehicleRepository implements InterfaceRepository<Vehicle> {
   @override
   Future<Vehicle?> update(String id, Vehicle newVechicle) async {
     final uri = Uri.parse('$baseUrl/$id');
-    print(newVechicle.toJson());
+
     final response = await http.put(uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(newVechicle.toJson()));
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
-      print('Response: ${response.body}');
+      
       return Vehicle.fromJson(json);
     } else {
       print('Failed to load vehicle: ${response.statusCode} - ${response.body}');

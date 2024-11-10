@@ -55,7 +55,7 @@ class PersonRepository implements InterfaceRepository<Person> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Response: ${response.body}');
+      
       return Person.fromJson(data);
     } else {
       print('Failed to load person: ${response.statusCode} - ${response.body}');

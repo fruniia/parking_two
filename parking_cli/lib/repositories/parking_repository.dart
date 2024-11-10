@@ -9,8 +9,7 @@ class ParkingRepository implements InterfaceRepository<Parking> {
   @override
   Future<Parking?> add(Parking parking) async {
     final uri = Uri.parse(baseUrl);
-    var jsonData = parking.toJson();
-    print(jsonData);
+
     final response = await http.post(
       uri,
       headers: {'Content-Type': 'application/json'},
@@ -76,9 +75,14 @@ class ParkingRepository implements InterfaceRepository<Parking> {
     final response = await http.put(uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(newParking.toJson()));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return Parking.fromJson(json);
+    } else {
+      print(
+          'Failed to load parking: ${response.statusCode} - ${response.body}');
+    }
 
-    final json = jsonDecode(response.body);
-
-    return Parking.fromJson(json);
+    return null;
   }
 }

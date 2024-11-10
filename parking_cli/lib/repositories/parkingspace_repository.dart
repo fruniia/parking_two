@@ -42,7 +42,6 @@ class ParkingSpaceRepository implements InterfaceRepository<ParkingSpace> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Response: ${response.body}');
       return ParkingSpace.fromJson(data);
     } else {
       print(
