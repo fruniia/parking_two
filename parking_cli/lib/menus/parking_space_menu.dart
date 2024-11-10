@@ -1,6 +1,5 @@
 import 'package:parking_cli/managers/parking_space_manager.dart';
 import 'package:parking_cli/repositories/parkingspace_repository.dart';
-import 'package:parking_cli_shared/parking_cli_shared.dart';
 
 import 'package:parking_cli/menus/menu.dart';
 import 'package:parking_cli/utils/utils.dart';
