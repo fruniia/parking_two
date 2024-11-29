@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+
+import 'package:http/http.dart';
 
 void displayWarning(String text) {
   print('\x1B[93m$text\x1B[0m');
@@ -34,4 +37,12 @@ String? getTextInput() {
 Future<int?> getInput(String text) async {
   displayInfo('Please enter $text:');
   return getNumberInput();
+}
+
+void handleError(Exception e) {
+  if (e is SocketException || e is FormatException || e is ClientException) {
+    displayWarning('Unable to reach the server. Please check your connection');
+  } else{
+    displayWarning('An unexpected error occured: \n$e');
+  }
 }

@@ -57,10 +57,14 @@ class PersonManager {
     displayInfo("Enter your name:");
     var newName = getTextInput();
     var ssn = _setSocSecNum();
-
     if (newName != null && ssn != '') {
       Person person = Person.withUUID(name: newName, socialSecNumber: ssn);
-      await personRepos.add(person);
+
+      try {
+        await personRepos.add(person);
+      } catch (e) {
+        handleError(e as Exception);
+      }
     } else {
       displayWarning('Nope!');
     }
@@ -83,16 +87,22 @@ class PersonManager {
   }
 
   Future<List<Person>> showPersons() async {
-    List<Person> persons = await personRepos.getAll();
-    if (persons.isNotEmpty) {
-      for (int index = 0; index < persons.length; index++) {
-        var person = persons[index];
-        print(
-            'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
+    try {
+      List<Person> persons = await personRepos.getAll();
+
+      if (persons.isNotEmpty) {
+        for (int index = 0; index < persons.length; index++) {
+          var person = persons[index];
+          print(
+              'Index $index: Name: ${person.name} SSN: ${person.socialSecNumber}');
+        }
+        return persons;
+      } else {
+        print('No persons registered');
+        return [];
       }
-      return persons;
-    } else {
-      print('No persons registered');
+    } catch (e) {
+      print('Error: $e');
       return [];
     }
   }
