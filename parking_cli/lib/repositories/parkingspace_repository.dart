@@ -1,81 +1,57 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
+import 'package:parking_cli/utils/fetch_data.dart';
 import 'package:parking_cli_shared/parking_cli_shared.dart';
 
 class ParkingSpaceRepository implements InterfaceRepository<ParkingSpace> {
   final baseUrl = "http://localhost:8080/parkingSpaces";
 
   @override
-  Future<List<ParkingSpace>> getAll() async {
-    final uri = Uri.parse(baseUrl);
-    final response =
-        await http.get(uri, headers: {'Content-Type': 'application/json'});
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return (data as List)
-          .map((parkingSpace) => ParkingSpace.fromJson(parkingSpace))
-          .toList();
-    }
-    throw Exception('Failed to load parkingspaces');
+  Future<ParkingSpace?> add(ParkingSpace parkingSpace) async {
+    return await fetchData<ParkingSpace>(
+      url: baseUrl,
+      method: 'POST',
+      body: parkingSpace.toJson(),
+      fromJson: (data) => ParkingSpace.fromJson(data),
+    );
   }
 
   @override
   Future<ParkingSpace?> delete(String id) async {
-    final uri = Uri.parse('$baseUrl/$id');
+    return await fetchData<ParkingSpace>(
+      url: '$baseUrl/$id',
+      method: 'DELETE',
+      fromJson: (data) => ParkingSpace.fromJson(data),
+    );
+  }
 
-    final response =
-        await http.delete(uri, headers: {'Content-Type': 'application/json'});
-
-    final json = jsonDecode(response.body);
-
-    return ParkingSpace.fromJson(json);
+  @override
+  Future<List<ParkingSpace>> getAll() async {
+    return await fetchData<List<ParkingSpace>>(
+      url: baseUrl,
+      method: 'GET',
+      fromJson: (data) {
+        return (data as List)
+            .map((parkingSpace) => ParkingSpace.fromJson(parkingSpace))
+            .toList();
+      },
+    );
   }
 
   @override
   Future<ParkingSpace?> getById(String id) async {
-    final uri = Uri.parse('$baseUrl/$id');
-
-    final response =
-        await http.get(uri, headers: {'Content-Type': 'application/json'});
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return ParkingSpace.fromJson(data);
-    } else {
-      print(
-          'Failed to load parkingspace: ${response.statusCode} - ${response.body}');
-      return null;
-    }
-  }
-
-  @override
-  Future<ParkingSpace?> update(String id, ParkingSpace newParkingSpace) async {
-    final uri = Uri.parse('$baseUrl/$id');
-
-    final response = await http.put(uri,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(newParkingSpace.toJson()));
-
-    final json = jsonDecode(response.body);
-
-    return ParkingSpace.fromJson(json);
-  }
-
-  @override
-  Future<ParkingSpace?> add(ParkingSpace item) async {
-    final uri = Uri.parse(baseUrl);
-
-    final response = await http.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(item.toJson()),
+    return await fetchData<ParkingSpace>(
+      url: '$baseUrl/$id',
+      method: 'GET',
+      fromJson: (data) => ParkingSpace.fromJson(data),
     );
+  }
 
-    if (response.statusCode == 200) {
-      return ParkingSpace.fromJson(jsonDecode(response.body));
-    }
-    throw Exception('Failed to add parkingspace ${response.body}');
+  @override
+  Future<ParkingSpace?> update(String id, ParkingSpace newItem) async {
+    return await fetchData<ParkingSpace>(
+      url: '$baseUrl/$id',
+      method: 'PUT',
+      body: newItem.toJson(),
+      fromJson: (data) => ParkingSpace.fromJson(data),
+    );
   }
 }
